@@ -1,10 +1,11 @@
 require 'rubygems'
+require 'rack'
 require 'sinatra'
 
-Sinatra::Application.default_options.merge!(
-  :run => false,
-  :env => :production
-)
+disable :run
 
-require 'pinky.rb'
-run Sinatra.application
+set :app_file, 'pinky.rb'
+# set :views,    '/full/path/views'
+
+require 'pinky'
+run Sinatra::Application
