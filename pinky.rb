@@ -36,7 +36,7 @@ end
 
 # ----- model -----------------------------------------------------------------
 
-DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/pinkies.db")
+DataMapper.setup(:default, (ENV["DATABASE_URL"] || "sqlite3://#{Dir.pwd}/pinkies.sqlite3"))
 
 class Install
   include DataMapper::Resource
