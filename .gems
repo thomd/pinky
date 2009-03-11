@@ -1,5 +1,5 @@
 hpricot --version '>= 0.2' --source code.whytheluckystiff.net
 dm-core --version 0.9.10
 haml --version 2.0.6
-mattetti-googlecharts --version 1.3.6
+mattetti-googlecharts --version 1.3.6 --source gems.github.com/
 do_sqlite3 --version 0.9.11
