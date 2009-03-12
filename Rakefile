@@ -9,9 +9,9 @@ task :fetch do
   Pinky.fetch_installs_from_userscripts_org
 end
 
-desc "parse data from userscripts.org each night at midnight and put it into database"
-task :cron => :environment do
-  if Time.now.hour == 0
+desc "parse data from userscripts.org each night and insert it into database"
+task :cron do
+  if Time.now.hour == 0  # (herokus cron runns every hour)
     Pinky.fetch_installs_from_userscripts_org
   end
 end
