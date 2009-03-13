@@ -13,5 +13,6 @@ desc "parse data from userscripts.org each night and insert it into database"
 task :cron do
   if Time.now.hour == 0  # (herokus cron runns every hour)
     Pinky.fetch_installs_from_userscripts_org
+    puts "cron on #{Time.now} !"
   end
 end
