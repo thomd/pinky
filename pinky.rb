@@ -71,13 +71,11 @@ end
 helpers do
 
   def x_range(installs)
-    # TODO: what's going on here? I need some refacoring!
     from    = installs.first.created_on
     to      = installs.last.created_on
-    n       = (to - from) < 4 ? (to - from) : 4
-    n = 1
-    delta   = ((to - from) / n).to_i
-    x_range = (0..n).collect { |x| (from + delta * x).strftime("%b %d") }
+    tics    = (to - from) < 6 ? (to - from) : 6
+    delta   = ((to - from) / tics).to_i
+    x_range = (0..tics).collect { |x| (from + delta * x).strftime("%b %d") }
   end
 
   def y_range(installs)
@@ -89,18 +87,18 @@ helpers do
     data     = installs.map{ |i| i.installs }
     x_labels = x_range(installs)
     y_labels = y_range(installs)
-    Gchart.line(:size => '600x200',
-                :title => name,
-                :title_size => 20,
-                :title_color => "3E3E3E",
-                :data => data,
-                :max_value => y_labels.max,
-                :line_colors => "2786C2",
-                :background => "E7E7DE",
+    Gchart.line(:size             => '600x200',
+                :title            => name,
+                :title_size       => 20,
+                :title_color      => "3E3E3E",
+                :data             => data,
+                :max_value        => y_labels.max,
+                :line_colors      => "2786C2",
+                :background       => "E7E7DE",
                 :chart_background => "FFFFFF",
                 :axis_with_labels => ['x','y','r'],
-                :axis_labels => [x_labels, y_labels, y_labels],
-                :format => 'image_tag')
+                :axis_labels      => [x_labels, y_labels, y_labels],
+                :format           => 'image_tag')
   end
 end
 
