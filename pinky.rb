@@ -138,18 +138,26 @@ __END__
       %p
         of
         %a{:href => UserscriptsUrl }= UserscriptsUrl
-      - @pinkies.each do |name, installs|
-        %ul
+      %ul
+        - @pinkies.each do |name, installs|
           %li
-          = chart(name, installs)
+            = chart(name, installs)
+    %p.footer
+      Deployed on 
+      %a{:href => "http://heroku.com"} Heroku
+      \- Sourcecode is on 
+      %a{:href => "http://github.com/thomd/pinky/commits/master"} GitHub
 
 @@beauty
+*
+  :margin 0
+  :padding 0
 body
   :font-family Helvetica Neue, Helvetica, Arial, sans-serif
   :background #E7E7DE
 #container
   :width 620px
-  :margin 40px auto
+  :margin 40px auto 0
   :padding 20px 40px
   :background #FFF
   :-moz-border-radius 20px
@@ -163,13 +171,6 @@ body
   p
     :font-size 18px
     :margin 0 0 50px
-  a
-    :color #2786C2
-    :text-decoration none
-    :padding 0 3px
-  a:hover
-    :color #FFF
-    background: #2786C2
   ul
     :list-style none
     :padding 0
@@ -179,3 +180,15 @@ body
     :border 10px solid #E7E7DE
     :-moz-border-radius 6px
     :-webkit-border-radius 6px
+a
+  :color #2786C2
+  :text-decoration none
+  :padding 0 3px
+a:hover
+  :color #FFF
+  background: #2786C2
+p.footer
+  :width 620px
+  :margin 10px auto 40px
+  :color #666
+  :font-size 85%
