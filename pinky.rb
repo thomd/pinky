@@ -97,8 +97,7 @@ helpers do
                 :background       => "E7E7DE",
                 :chart_background => "FFFFFF",
                 :axis_with_labels => ['x','y','r'],
-                :axis_labels      => [x_labels, y_labels, y_labels],
-                :format           => 'image_tag')
+                :axis_labels      => [x_labels, y_labels, y_labels])
   end
 end
 
@@ -110,7 +109,6 @@ end
 get '/stats' do
   @pinkies = Hash.new
   Userscript.all.each do |userscript|
-    # TODO: needs to be refactored! too much sql-queries
     @pinkies[userscript.script_name] = userscript.installs(:order => [:created_on.asc])
   end
   haml :stats
@@ -141,7 +139,7 @@ __END__
       %ul
         - @pinkies.each do |name, installs|
           %li
-            = chart(name, installs)
+            %img{:src => chart(name, installs)} 
     %p.footer
       Deployed on 
       %a{:href => "http://heroku.com"} Heroku
