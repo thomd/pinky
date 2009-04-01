@@ -2,7 +2,6 @@
 require 'rubygems'
 require 'sinatra'
 require 'hpricot'
-require 'net/http'
 require 'haml'
 require 'dm-core'
 require 'gchart'
@@ -13,14 +12,14 @@ require 'yaml'
 class Pinky
 
   def self.fetch_installs_from_userscripts_org
-    html = Net::HTTP.get(URI.parse(UserscriptsUrl))
-    doc = Hpricot(html)
+    doc = Hpricot(open(UserscriptsUrl))
     (doc/"//table//tr/td").each_with_index do |td, i|
 
-      # row 1: name of userscript
+      # row 1: name and id of userscript
       if (i%6 == 1) then
-        @name = td.search("/a").inner_text
-        @userscript = Userscript.first_or_create(:script_name => @name)
+        @name = td.search("a").text
+        @id =   td.search("a").first[:href].gsub(/^\/scripts\/show\//, "")
+        @userscript = Userscript.first_or_create(:script_name => @name, :script_id => @id)
       end
 
       # row 4: number of installs
@@ -50,6 +49,7 @@ end
 class Userscript
   include DataMapper::Resource
   property :id,           Serial
+  property :script_id,    String
   property :script_name,  String
   has n, :installs
 end
@@ -61,8 +61,7 @@ DataMapper.auto_upgrade!
 # ----- sinatra ---------------------------------------------------------------
 
 configure do
-
-  UserscriptsUrl = "http://userscripts.org/users/43919/scripts"
+  UserscriptsUrl = "http://userscripts.org/users/43919/scripts"   # set URL of your userscripts
   Title = "userscripts.org install statistics"
   set :sass, :style => :expanded
 end
@@ -83,7 +82,6 @@ helpers do
   end
 
   def chart(name, installs)
-    return "'#{name}' needs more data!" if installs.length == 1
     data     = installs.map{ |i| i.installs }
     x_labels = x_range(installs)
     y_labels = y_range(installs)
