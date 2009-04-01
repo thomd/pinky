@@ -1,11 +1,9 @@
-
 require 'rubygems'
 require 'sinatra'
 require 'hpricot'
 require 'haml'
 require 'dm-core'
 require 'gchart'
-require 'active_support'
 require 'yaml'
 
 
@@ -87,7 +85,6 @@ helpers do
     x_labels = x_range(pinky["installs"])
     y_labels = y_range(pinky["installs"])
     Gchart.line(:size             => '600x200',
-                :title            => pinky['name'],
                 :title_size       => 20,
                 :title_color      => "3E3E3E",
                 :data             => data,
@@ -102,10 +99,10 @@ end
 
 
 get '/' do
-  redirect '/stats'
+  redirect '/userscripts'
 end
 
-get '/stats' do
+get '/userscripts' do
   @pinkies = []
   Userscript.all.each do |userscript|
     @pinkies.push({"id" => userscript.script_id, "name" => userscript.script_name, "installs" => userscript.installs(:order => [:created_on.asc])})
@@ -113,11 +110,18 @@ get '/stats' do
   haml :stats
 end
 
+get '/userscript/:id' do
+  redirect chart({"installs" => Userscript.first(:script_id => params[:id]).installs(:order => [:created_on.asc])})
+end
+
 get '/beauty.css' do
   content_type 'text/css'
   sass :beauty
 end
 
+error do
+  "my pity is limited."
+end
 
 use_in_file_templates!
 __END__
@@ -138,8 +142,8 @@ __END__
       %ul
         - @pinkies.each do |pinky|
           %li
-            %a.chart{:href => ScriptUrl + pinky["id"], :title => pinky["id"]}
-              %img{:src => chart(pinky)}
+            %a{:href => ScriptUrl + pinky["id"]}= pinky["name"]
+            %img{:src => chart(pinky)}
     %p.footer
       Deployed on 
       %a{:href => "http://heroku.com"} Heroku
@@ -173,11 +177,14 @@ body
     :list-style none
     :padding 0
     :font-size 120%
-  img
-    :margin-bottom 40px
+  li
     :border 10px solid #E7E7DE
-    :-moz-border-radius 6px
-    :-webkit-border-radius 6px
+    :background #E7E7DE
+    :-moz-border-radius 8px
+    :-webkit-border-radius 8px
+    :margin-bottom 40px
+    a
+      :font-size 85%
 a
   :color #2786C2
   :text-decoration none
@@ -185,8 +192,6 @@ a
 a:hover
   :color #FFF
   background: #2786C2
-a.chart:hover
-  background: none
 p.footer
   :width 620px
   :margin 10px auto 40px
