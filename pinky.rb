@@ -49,8 +49,8 @@ end
 class Userscript
   include DataMapper::Resource
   property :id,           Serial
-  property :script_id,    String
   property :script_name,  String
+  property :script_id,    String
   has n, :installs
 end
 
@@ -62,7 +62,8 @@ DataMapper.auto_upgrade!
 
 configure do
   UserscriptsUrl = "http://userscripts.org/users/43919/scripts"   # set URL of your userscripts
-  Title = "userscripts.org install statistics"
+  ScriptUrl      = "http://userscripts.org/scripts/show/"
+  Title          = "userscripts.org install statistics"
   set :sass, :style => :expanded
 end
 
@@ -81,12 +82,12 @@ helpers do
     (0..4).collect { |y| y * (installs.last.installs / 4 * 1.2).to_i }
   end
 
-  def chart(name, installs)
-    data     = installs.map{ |i| i.installs }
-    x_labels = x_range(installs)
-    y_labels = y_range(installs)
+  def chart(pinky)
+    data     = pinky["installs"].map{ |i| i.installs }
+    x_labels = x_range(pinky["installs"])
+    y_labels = y_range(pinky["installs"])
     Gchart.line(:size             => '600x200',
-                :title            => name,
+                :title            => pinky['name'],
                 :title_size       => 20,
                 :title_color      => "3E3E3E",
                 :data             => data,
@@ -105,9 +106,9 @@ get '/' do
 end
 
 get '/stats' do
-  @pinkies = Hash.new
+  @pinkies = []
   Userscript.all.each do |userscript|
-    @pinkies[userscript.script_name] = userscript.installs(:order => [:created_on.asc])
+    @pinkies.push({"id" => userscript.script_id, "name" => userscript.script_name, "installs" => userscript.installs(:order => [:created_on.asc])})
   end
   haml :stats
 end
@@ -133,11 +134,12 @@ __END__
       %h1= Title
       %p
         of
-        %a{:href => UserscriptsUrl }= UserscriptsUrl
+        %a{:href => UserscriptsUrl}= UserscriptsUrl
       %ul
-        - @pinkies.each do |name, installs|
+        - @pinkies.each do |pinky|
           %li
-            %img{:src => chart(name, installs)} 
+            %a.chart{:href => ScriptUrl + pinky["id"], :title => pinky["id"]}
+              %img{:src => chart(pinky)}
     %p.footer
       Deployed on 
       %a{:href => "http://heroku.com"} Heroku
@@ -183,6 +185,8 @@ a
 a:hover
   :color #FFF
   background: #2786C2
+a.chart:hover
+  background: none
 p.footer
   :width 620px
   :margin 10px auto 40px
