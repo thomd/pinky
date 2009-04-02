@@ -143,12 +143,11 @@ __END__
         - @pinkies.each do |pinky|
           %li
             %a{:href => ScriptUrl + pinky["id"]}= pinky["name"]
-            %img{:src => chart(pinky)}
+            %img{:src => "/userscript/" + pinky["id"]}
     %p.footer
-      Deployed on 
+      %a{:href => "http://github.com/thomd/pinky/commits/master"} Pinky
+      is deployed on 
       %a{:href => "http://heroku.com"} Heroku
-      \- Sourcecode is on 
-      %a{:href => "http://github.com/thomd/pinky/commits/master"} GitHub
 
 @@beauty
 *
@@ -168,7 +167,7 @@ body
   :color #929388
   h1
     :color #3E3E3E
-    :font-size 36px
+    :font-size 238%
     :margin-bottom 8px
   p
     :font-size 18px
@@ -196,4 +195,5 @@ p.footer
   :width 620px
   :margin 10px auto 40px
   :color #666
-  :font-size 85%
+  :font-size 75%
+  :text-align center
