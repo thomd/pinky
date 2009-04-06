@@ -104,7 +104,8 @@ end
 
 get '/userscripts' do
   @pinkies = []
-  Userscript.all.each do |userscript|
+  userscripts = Userscript.all(:order => [:script_name.asc])
+  userscripts.each do |userscript|
     @pinkies.push({"id" => userscript.script_id, "name" => userscript.script_name, "installs" => userscript.installs(:order => [:created_on.asc])})
   end
   haml :stats
