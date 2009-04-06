@@ -146,7 +146,9 @@ __END__
             %img{:src => "/userscript/" + pinky["id"]}
     %p.footer
       %a{:href => "http://github.com/thomd/pinky/commits/master"} Pinky
-      is deployed on 
+      is a
+      %a{:href => "http://www.sinatrarb.com/"} Sinatra
+      application deployed on 
       %a{:href => "http://heroku.com"} Heroku
 
 @@beauty

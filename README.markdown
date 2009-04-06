@@ -1,43 +1,33 @@
 ## Pinky
 
-Pinky generates graphs of your greasemonkey-userscript-installs (hosted on [userscripts.org](http://userscripts.org/)) over time. Pinky is written in Ruby using Sinatra, DataMapper and Googlecharts (with help of the loved-by-everybody Haml and Hpricot)
+Pinky generates graphs on installs-over-time of your greasemonkey userscripts hosted on [userscripts.org](http://userscripts.org/). Pinky is written in Ruby using Sinatra, DataMapper and Googlecharts (with help of the loved-by-everybody Haml and Hpricot)
 
 ### Requirements
 
-gems required:
+see `.gems` for required gems:
 
-		$ sudo gem install sinatra
-		$ sudo gem install dm-core
-		$ sudo gem install haml
-		$ sudo gem install hpricot
-		$ sudo gem install mattetti-googlecharts
+		hpricot --version '>= 0.2' --source code.whytheluckystiff.net
+		dm-core --version 0.9.10
+		haml --version 2.0.6
+		mattetti-googlecharts --version 1.3.6 --source gems.github.com/
+		do_sqlite3 --version 0.9.11
+
 
 Pinky is currently using Sqlite3 for data storage. You may use any other database supported by datamapper.
 
-		$ sudo gem install do_sqlite3
-  
 
 ### Fetch data from userscripts.org
 
 To parse the current number of installs of your userscripts run a rake task:
 		rake fetch
  
-set up a cron job for daily parsing of the current number of installs. 
+set up a cron job for daily parsing of the current number of installs. there is an other taks `rake cron` which is used by [heroku](http://docs.heroku.com/cron) for periodic jobs.
 
 
 
 ### Installation
 
-Clone the application and run 
-
-		ruby pinky.rb 
-  
-within the application directory.
-  
-Then point your browser to:
-
-		http://localhost:4567
-
+the most easy way is to deploy Pinky on [heroku](http://www.heroku.com).
 
 
 ### Copying
