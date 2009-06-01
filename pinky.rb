@@ -14,14 +14,14 @@ class Pinky
     (doc/"//table//tr/td").each_with_index do |td, i|
 
       # row 1: name and id of userscript
-      if (i%5 == 0) then
+      if (i%6 == 0) then
         @name = td.search("a").text
         @id =   td.search("a").first[:href].gsub(/^\/scripts\/show\//, "")
         @userscript = Userscript.first_or_create(:script_name => @name, :script_id => @id)
       end
 
-      # row 4: number of installs
-      if (i%5 == 3) then
+      # row 5: number of installs
+      if (i%6 == 4) then
         Install.create(:userscript => @userscript, :installs => td.inner_text, :created_on => Time.now)
       end
     end
